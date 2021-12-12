@@ -58,9 +58,10 @@ OR
 
 Nginx configuration:
 ```javascript
-# add this SCRIPT_NAME parameter in your configuration section or in "scgi_params" config file, otherwise perl-spm can not determine file location
-scgi_param      SCRIPT_FILENAME    $request_filename;
-scgi_param      SCRIPT_NAME        $fastcgi_script_name;
+## add this SCRIPT_NAME parameter in your configuration section or in "scgi_params" config file
+## otherwise perl-spm can not determine file location
+# scgi_param      SCRIPT_FILENAME    $request_filename;
+# scgi_param      SCRIPT_NAME        $fastcgi_script_name;
 
 # add a perl-spm upstream server to your nginx configuration
 upstream perl-spm {
