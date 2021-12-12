@@ -99,4 +99,10 @@ location ~ /perl-spm/ {
 
 ```
 
+# Start perl-spm
+You can run the perl-spm.pl file directly but i would suggest using the INIT-script "/etc/init.d/perl-spm start". 
+
+If you run the "perl-spm.pl" from command line, you have to initially execute it by root for automatic creation of the logfile under "/var/log/perl-spm.log".
+After that you can also start it as unprivileged user, it will drop privileges and change to the configured RUN_USER. 
+
 Enjoy! :-)
