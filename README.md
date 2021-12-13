@@ -11,7 +11,10 @@ SCGI offers excellent performance and simplicity. There are no protocoll feature
 Also take a look at the modern Perl Web Server Gateway Interface (PSGI) in comparison. 
 
 # Perl + SCGI
-Perl and SCGI perfectly fit together in an preforking server design, because child processes can be terminated after each request which leads to a very simple and performant memory management. 
+Perl and SCGI perfectly fit together in an preforking server design, because child processes can be terminated after each request which leads to a very simple and performant memory management.
+
+# Warnings
+1. Do NOT use `exit` in your scripts! This will exit the executing child process too (see technical background), so you won't be able to get any feedback or errors from your script. Always use `die` instead of `exit`!
 
 # Installation
 Just copy the main "perl-spm.pl" file on your system and copy the INIT script "perl-spm" under to "/etc/init.d/" (do not forget to adjust the path to "perl-spm.pl" inside the INIT-script). On its first launch it will create a log file under "/var/log/perl-spm.log" and adjust file privileges to the configured system user.
@@ -104,5 +107,8 @@ You can run the perl-spm.pl file directly but i would suggest using the INIT-scr
 
 If you run the "perl-spm.pl" from command line, you have to initially execute it by root for automatic creation of the logfile under "/var/log/perl-spm.log".
 After that you can also start it as unprivileged user, it will drop privileges and change to the configured RUN_USER. 
+
+# Technical background
+Perl-SPM preforks the number of configured child process, which will then execute perl scripts via `do` in their own context. This is very neat from performance perspectiv because you do not need to run another process for scrpit execution, frees memory after child process termination and benefits from `do` features described under https://perldoc.perl.org/functions/do.
 
 Enjoy! :-)
