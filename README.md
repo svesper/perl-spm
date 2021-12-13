@@ -22,7 +22,7 @@ Just copy the main "perl-spm.pl" file on your system and copy the INIT script "p
 # Configuration
 At the beginning of the "perl-spm.pl" file you can configure the unprivileged user via RUN_USER and RUN_GROUP normally "www-data" together with some other variables like total process to spawn, ports and so on. The defaults values should be fine to start with.
 
-Apache configuration:
+## Apache configuration
 
 Remember, in order to make the following examples work, you have to enable mod_proxy and mod_proxy_scgi.
 https://httpd.apache.org/docs/2.4/mod/mod_proxy_scgi.html
@@ -59,7 +59,7 @@ OR
 
 ```
 
-Nginx configuration:
+## Nginx configuration
 ```javascript
 ## add this SCRIPT_NAME parameter in your configuration section or in "scgi_params" config file
 ## otherwise perl-spm can not determine file location
