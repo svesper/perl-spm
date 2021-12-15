@@ -6,6 +6,11 @@ Perl-SPM is an application server to simply and fast execute your perl scripts i
 Perl-SPM uses Simple Common Gateway Interface (SCGI) to connect to web servers which is similar to FastCGI but simpler designed.
 Perl-SPM tries to be as useful as PHP-FPM (FastCGI Process Manager) is for PHP and was created in analogy to PHP-FPM development and deployment philosophie.
 
+# Use cases
+Main use case for perl-SPM is the execution of perl scripts as backend SCGI server in combination with Nginx or Apache. 
+Easy and performant execution of perl scripts with Nginx was the main motivation to create perl-SPM.
+Any other webserver with SCGI support should work too together with perl-SPM.
+
 # SCGI
 SCGI offers excellent performance and simplicity. There are no protocoll features like connection multiplexing which increase software complexity unnecessary. Instead you get stability and simplicity as a tradeoff for rarley used features. 
 Also take a look at the modern Perl Web Server Gateway Interface (PSGI) in comparison. 
