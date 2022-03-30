@@ -26,10 +26,11 @@ use IO::Socket;
 use IO::Select;
 use Fcntl ':flock';
 
-our $VERSION = 1.34;
+our $VERSION = 1.35;
 
 
 use constant LOG_LEVEL		=> 2;			# 1=ERROR, 2=INFO, 3=DEBUG | LL >0 = ERROR; LL >1 = INFO; LL >2 = DEBUG
+use constant LOG_IP             => 2;                   # 0=no IP logging, 1=anonymous IP, 2=full IP log
 use constant LOCAL_PORT		=> 9004;		# default 9004
 use constant LOCAL_ADDR		=> 'localhost';
 use constant RUN_USER		=> 'www-data';
@@ -366,8 +367,26 @@ sub scgi_request {
 #		$ENV{'CONTENT_LENGTH'} = 0;
 #	}
 
-	my @ip = split(/\.|:/, $ENV{'REMOTE_ADDR'});
-	my $client_ip = $ip[0].'.'.$ip[1];
+        my $client_ip = '';
+
+        if(LOG_IP == 0) {
+                $client_ip = '-';
+        } elsif (LOG_IP > 0) {
+                if (defined $ENV{'HTTP_X_REAL_IP'}) {
+                        $client_ip = $ENV{'HTTP_X_REAL_IP'};
+                }
+                elsif (defined $ENV{'HTTP_X_FORWARDED_FOR'}) {
+                        $client_ip = $ENV{'HTTP_X_FORWARDED_FOR'};
+                }
+                elsif (defined $ENV{'REMOTE_ADDR'}) {
+                        $client_ip = $ENV{'REMOTE_ADDR'};
+                }
+
+                if(LOG_IP == 1) {
+                        my @ip = split(/\.|:/, $client_ip);
+                        $client_ip = $ip[0].'.'.$ip[1];
+                }
+        }
 	
 	if(LOG_LEVEL >2) { 		# debug request header
 		my $str;
@@ -375,8 +394,6 @@ sub scgi_request {
 			$str .= $key."->".$ENV{$key}." # ";
 		}
 		_log($str);
-
-		$client_ip = $ENV{'REMOTE_ADDR'};
 	}	
 
 	# log client request to file
