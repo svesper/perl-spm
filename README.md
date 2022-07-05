@@ -114,6 +114,6 @@ If you run the "perl-spm.pl" from command line, you have to initially execute it
 After that you can also start it as unprivileged user, it will drop privileges and change to the configured RUN_USER. 
 
 # Technical background
-Perl-SPM preforks the number of configured child process, which will then execute perl scripts via `do` in their own context. This is very neat from performance perspectiv because you do not need to run another process for scrpit execution, frees memory after child process termination and benefits from `do` features described under https://perldoc.perl.org/functions/do.
+Perl-SPM preforks the number of configured child process, which will then execute perl scripts via `do` in their own context. This is very neat from performance perspectiv because you do not need to run another process for script execution, frees memory after child process termination and benefits from `do` features described under https://perldoc.perl.org/functions/do.
 
 Enjoy! :-)
