@@ -2,7 +2,7 @@
 
 # perl-spm
 # Perl SCGI Process Manager - SCGI application server
-# Author: Copyright 2021, S.Vesper (https://github.com/svesper/)
+# Author: Copyright 2021-2022, S.Vesper (https://github.com/svesper/)
 # License: GPL
 
 # This program is free software; you can redistribute it and/or modify
@@ -26,7 +26,7 @@ use IO::Socket;
 use IO::Select;
 use Fcntl ':flock';
 
-our $VERSION = 1.35;
+our $VERSION = 1.36;
 
 
 use constant LOG_LEVEL		=> 2;			# 1=ERROR, 2=INFO, 3=DEBUG | LL >0 = ERROR; LL >1 = INFO; LL >2 = DEBUG
@@ -105,7 +105,7 @@ while (!$SRV_EXIT) {
 
 		#_log("child msg main loop: $message");
 		foreach my $msg ( split("\n", $ipc_msg) ) {
-			my ($pid,$status) = $msg =~ /^(\d+):(.+)$/;
+			my ($pid,$status) = $msg =~ /^([0-9]+):(.+)$/;
 			
 			if ($status ne 'exit') {
 				$SRV_PROC{$pid} = $status;
@@ -241,7 +241,7 @@ sub handle_connection {
 	#
 	# SCGI request
 	#
-	if ($buffer =~ m/^\d+:/ ) {
+	if ($buffer =~ m/^[0-9]+:/ ) {
 		_log("SCGI Request.") if (LOG_LEVEL >2);
 
 
@@ -250,7 +250,7 @@ sub handle_connection {
 		#
 	
 		# get scgi request header length	
-		my ($scgi_hdr_len) = $buffer =~ m|^(\d+):|;
+		my ($scgi_hdr_len) = $buffer =~ m|^([0-9]+):|;
 	
 		if ( !defined($scgi_hdr_len) ) {
 			_log("malformed netstring length - closing connection");
@@ -286,7 +286,7 @@ sub handle_connection {
 		# SCGI Body
 		#
 		
-		my ($content_length) = $buffer =~ m|CONTENT_LENGTH\x00(\d+)\x00|;
+		my ($content_length) = $buffer =~ m|CONTENT_LENGTH\x00([0-9]+)\x00|;
 		_log("CONTENT_LENGTH: $content_length") if (LOG_LEVEL >2);
 		
 		my $body_buffer_len  = $header_buffer_len + $content_length;
@@ -351,7 +351,7 @@ sub scgi_request {
 	_log("Body   length: ".length($buffer)) if (LOG_LEVEL >2);
 
 	# remove header length from buffer string beginning
-	$header =~ s/^(\d+)://;
+	$header =~ s/^([0-9]+)://;
 	# remove body separator "," from header
 	$header =~ s/,$//;
 	
@@ -557,7 +557,7 @@ sub open_pid_file {
     		my $fh = IO::File->new($file) || return;
     		my $pid = <$fh>;
 		# check id pid is number
-    		die "Invalid PID file" unless $pid =~ /^(\d+)$/;
+    		die "Invalid PID file" unless $pid =~ /^([0-9]+)$/;
 		# check that the process is alive/exist. kill 0 returns true without actually terminating it.
     		die "Server already running with PID $1" if kill 0 => $1;
     		warn "Removing PID file for defunct server process $pid.\n";
